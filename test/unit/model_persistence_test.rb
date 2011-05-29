@@ -256,8 +256,21 @@ module Tire
 
           should "perform model validations" do
             Configuration.client.expects(:post).never
- 
+
             assert ! ValidatedModel.create(:name => nil)
+          end
+
+          should "not create document if uniqueness validation failed" do
+            response = { 'hits' => { 'hits' => [{'_id' => 1, '_score' => 0.8, '_source' => { 'name' => 'First name' }}], 'total' => 1 } }
+            Configuration.client.expects(:post).returns(mock_response(response.to_json))
+            Index.any_instance.expects(:store).never
+            assert ! ValidatedModel.create(:name => "First name")
+          end
+
+          should "create document if uniqueness validation passed" do
+            response = { 'hits' => { 'hits' => [], 'total' => 0 } }
+            Configuration.client.expects(:post).returns(mock_response(response.to_json))
+            assert ValidatedModel.new(:name => "First name").valid?
           end
 
         end

@@ -27,6 +27,7 @@ require 'tire/model/import'
 require 'tire/model/persistence/finders'
 require 'tire/model/persistence/attributes'
 require 'tire/model/persistence/storage'
+require 'tire/model/persistence/validations/uniqueness'
 require 'tire/model/persistence'
 require 'tire/tasks'
 
