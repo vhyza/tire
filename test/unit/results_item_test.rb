@@ -71,7 +71,6 @@ module Tire
         assert_equal 'Kafka', @document.read_attribute_for_serialization(:author)[:name]
       end
 
-
       should "allow to retrieve value by methods" do
         assert_not_nil @document.title
         assert_equal 'Test', @document.title
@@ -138,6 +137,16 @@ module Tire
         assert_instance_of Hash, @document.as_json
         assert_equal 'Test', @document.as_json(:only => 'title')['title']
         assert_nil           @document.as_json(:only => 'title')['author']
+      end
+
+      should "be able to change attribute value using dot notation" do
+        @document.title = "Another test"
+        assert_equal 'Another test', @document.title
+      end
+
+      should "be able to change attribute value using hash-like notation" do
+        @document[:title] = "Another test"
+        assert_equal 'Another test', @document.title
       end
 
       should "be inspectable" do

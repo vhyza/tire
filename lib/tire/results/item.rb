@@ -23,7 +23,11 @@ module Tire
       # Delegate method to a key in underlying hash, if present, otherwise return +nil+.
       #
       def method_missing(method_name, *arguments)
-        @attributes[method_name.to_sym]
+        if method_name.to_s.end_with?("=")
+          @attributes[method_name.to_s.chop.to_sym] = arguments.first
+        else
+          @attributes[method_name.to_sym]
+        end
       end
 
       def respond_to?(method_name, include_private = false)
@@ -32,6 +36,10 @@ module Tire
 
       def [](key)
         @attributes[key.to_sym]
+      end
+
+      def []=(key, value)
+        @attributes[key.to_sym] = value
       end
 
       alias :read_attribute_for_serialization :[]
